@@ -1,40 +1,31 @@
-import { galleryItems } from './gallery-items.js';
+import { galleryItems } from "./gallery-items.js";
 // Change code below this line
+console.log(galleryItems);
 
-Console.log(galleryItems);
+const gallery = document.querySelector(".gallery");
 
-const galleryContainer = document.querySelector('ul.gallery');
-const photosMarkup = createGalleryItem(galleryItems);
-
-function createGalleryItem(element) {
-    return element
-        .map(({ preview, original, description }) => {
-            return `
-        <li class='gallery_item'>
-        <a class= "gallery__link" href="${original}">
-        <img
-        class = "gallery__image"
-        src="${preview}"
-        data-source="${original}"
-        alt="${description}"
-        />
+function createGallery(items) {
+  return items
+    .map(
+      (item) =>
+        `<li class="gallery__item">
+        <a class="gallery__link" href="${item.preview}">
+            <img class="gallery__image" src="${item.original}" alt="${item.description}" />
         </a>
-        </li>`;
-        })
+     </li>`
+    )
+    .join("");
+}
+const addGallery = createGallery(galleryItems);
 
-        .join('');
-};
+gallery.innerHTML = addGallery;
 
+function action(imageAction) {
+  imageAction.preventDefault();
+}
 
-
-galleryContainer.insertAdjacentHTML("beforeend", photosMarkup);
-
-//Aqui usamos simplelightbox
-
-var lightbox = new SimpleLightbox(".gallery a", {
-    captionDelay: 250,
-    captions: true,
-    captionsData: "alt",
-    captionPosition: "bottom",
+let lightbox = new SimpleLightbox(".gallery a", {
+  /* options */
 });
-lightbox.on('show.simplelightbox')
+
+console.log(lightbox);

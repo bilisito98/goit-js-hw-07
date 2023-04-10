@@ -1,51 +1,57 @@
-import { galleryItems } from './gallery-items.js';
-// Change code below this line
+import { galleryItems } from "./gallery-items.js";
 
-console.log(galleryItems);
+const gallery = document.querySelector(".gallery");
 
-const galleryContainer = document.querySelector('div.gallery');
-const photosMarkup = createGalleryItem(galleryItems);
+function createGallery(items) {
+  return items
+    .map(
+      (item) => `
+     <li class="gallery__item">
+       <a class="gallery__link" href="${item.original}">
+         <img
+           class="gallery__image"
+           src="${item.preview}"
+           data-source="${item.original}"
+           alt="${item.description}"
+         />
+       </a>
+     </li>`
+    )
+    .join("");
+}
 
-function createGalleryItem(element) {
-  return element
-    .map(({ preview, original, description }) => {
-      return `
-        <div class='gallery_item'>
-        <a class= "gallery__link" href="${original}">
-        <img
-        class = "gallery__image"
-        src="${preview}"
-        data-source="${original}"
-        alt="${description}"
-        />
-        </a>
-        </div>`;
-    })
+gallery.innerHTML = createGallery(galleryItems);
+const addGallery = createGallery(galleryItems);
 
-    .join('');
-};
+gallery.innerHTML = addGallery;
 
+gallery.addEventListener("click", clickOnImage);
 
-const galleryHandler = (event) => {
-  event.preventDefault();
+function clickOnImage(imageAction) {
+  action(imageAction);
 
-  if (event.target.nodeName !== 'IMG') {
+  if (imageAction.target.nodeName !== "IMG") {
     return;
-  };
+  }
 
-  const originalUrl = event.target.dataset.source;
-  const instance = basicLightbox.create(`<img src="${originalUrl}">`);
-
+  const instance = basicLightbox.create(
+    `<img src="${imageAction.target.dataset.source}" width="800" height="600">`
+  );
   instance.show();
-  window.addEventListener('keydown', onEsckeyPress);
 
-  function onEsckeyPress(event) {
-    const ESC_KEY_CODE = 'Escape';
-    if (event.code === ESC_KEY_CODE) {
+  //    se agrega un eventlistener; que cuando se pulse la tecla ESCAPE se cierre la imagen que esta previamente en pantalla completa
+
+  window.addEventListener("keydown", handleEscapeKey);
+
+  function handleEscapeKey(imageAction) {
+    if (imageAction.code === "Escape") {
       instance.close();
-      window.removeEventListener('keydown', onEsckeyPress);
+      window.removeEventListener("keydown", handleEscapeKey);
     }
   }
-};
-galleryContainer.insertAdjacentHTML('beforeend', photosMarkup);
-galleryContainer.addEventListener('click', galleryHandler);
+}
+
+function action(imageAction) {
+  imageAction.preventDefault();
+}
+console.log(galleryItems)
